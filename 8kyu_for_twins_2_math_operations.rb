@@ -16,4 +16,6 @@
 # ice_brick_volume(5, 30, 7) # => 1150
 
 # Solution
-
+def ice_brick_volume(r, bottle, rim)
+  ((r * 2 / Math.sqrt(2)) ** 2 * (bottle - rim)).round
+end
