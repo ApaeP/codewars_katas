@@ -17,4 +17,7 @@
 # The value of x * x * y
 
 # Solution
-
+def missing_values(a)
+  h = a.group_by { |x| a.count(x) }
+  h[1].first ** 2 * h[2].first
+end
