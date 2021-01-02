@@ -14,7 +14,7 @@
 # Solution
 def create_array_of_tiers(num, s = [])
   num.digits.size.times do |i|
-    s <<num.digits.reverse[0..i].join.to_s
+    s << num.digits.reverse[0..i].join.to_s
   end
   s
 end
