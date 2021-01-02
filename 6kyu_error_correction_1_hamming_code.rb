@@ -49,8 +49,7 @@ def encode(s)
   s.unpack('B*').first.chars.map { |e| e * 3 }.join
 end
 
-def decode(bits)
-  s = ""
+def decode(bits, s = "")
   bits.chars.each_slice(3) do |e|
     s << e.max_by { |i| e.count(i) }
   end
