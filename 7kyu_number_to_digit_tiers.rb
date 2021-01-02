@@ -20,4 +20,4 @@ def create_array_of_tiers(num, s = [])
 end
 
 
-# Completed at : 2021-01-02 17:26:44 +0100
+# Completed at : 2021-01-02 17:30:40 +0100
