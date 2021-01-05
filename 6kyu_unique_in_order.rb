@@ -10,8 +10,8 @@
 
 # Solution
 def unique_in_order(iterable, s = [])
-  pe = (iterable.is_a?(String) ? iterable.chars : iterable).chunk { |x| x }.map(&:first)
-  p pe
+  (iterable.is_a?(String) ? iterable.chars : iterable).chunk { |x| x }.map(&:first)
+
 end
 
 
