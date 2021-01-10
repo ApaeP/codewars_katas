@@ -17,9 +17,6 @@
 # 86  -->  100
 
 # Solution
-def graceful_tipping(bill)
-  (x = bill + (bill / 100.0 * 15)) > 9 ? (x / (y = (10 ** Math.log10(x).to_i rescue 1) / 10 * 5) ).ceil * y : x.ceil
-end
 def graceful_tipping(b)
   (b *= 1.15) > 9 ? ((b / (y = (10 ** Math.log10(b).to_i) / 2)).ceil rescue 10) * y : b.ceil
 end
