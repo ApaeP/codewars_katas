@@ -37,6 +37,7 @@ def max_multiple(d, b, x = 0)
   end
   x - d
 end
+
 def max_multiple(divisor, bound)
   bound - bound % divisor
 end
