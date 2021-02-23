@@ -17,12 +17,12 @@ class Kata
     @instructions = read_instructions
     @solution = read_solution
     create_rb_file
-    @file_path = "Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
+    @file_path = "/Users/paulportier/code/ApaeP/codewars/codewars_katas/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
   end
 
   def create_rb_file
-    raise StandardError.new "This kata (#{@level}kyu - #{@title}) seems to have already been stored" if File.file?("Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb")
-    system "touch Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
+    raise StandardError.new "This kata (#{@level}kyu - #{@title}) seems to have already been stored\n PATH = /Users/paulportier/code/ApaeP/codewars/codewars_katas/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb" if File.file?("/Users/paulportier/code/ApaeP/codewars/codewars_katas/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb")
+    system "touch /Users/paulportier/code/ApaeP/codewars/codewars_katas/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
   end
 
   def write
@@ -37,13 +37,15 @@ class Kata
   end
 
   def push_github
+    puts "change directory"
+    # system "cd /Users/paulportier/code/ApaeP/codewars/codewars_katas"
+    Dir.chdir "/Users/paulportier/code/ApaeP/codewars/codewars_katas"
     puts "\ngaa\n"
     system "git add ."
     puts "\ngcmsg\n"
     system "git commit -m \"Kata completed (#{@title} #{@level}kyu)\""
-    puts "\npush master\n"
+    puts "\npush on master\n"
     system "git push origin master"
-    # system "git add .\ngit commit -m \"Kata completed (#{@title} #{@level}kyu)\"\ngit push origin master"
   end
 
   private
