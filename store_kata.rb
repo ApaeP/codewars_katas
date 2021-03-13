@@ -3,7 +3,6 @@
 # push it on GitHub
 require_relative '../credits'
 
-
 class Kata
   attr_accessor :url, :level, :title, :instructions, :solution, :file_path, :language
   require 'watir'
@@ -17,12 +16,12 @@ class Kata
     @instructions = read_instructions
     @solution = read_solution
     create_rb_file
-    @file_path = "/Users/paulportier/code/ApaeP/codewars/codewars_katas/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
+    @file_path = "#{$dir_path}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
   end
 
   def create_rb_file
-    raise StandardError.new "This kata (#{@level}kyu - #{@title}) seems to have already been stored\n PATH = /Users/paulportier/code/ApaeP/codewars/codewars_katas/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb" if File.file?("/Users/paulportier/code/ApaeP/codewars/codewars_katas/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb")
-    system "touch /Users/paulportier/code/ApaeP/codewars/codewars_katas/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
+    raise StandardError.new "This kata (#{@level}kyu - #{@title}) seems to have already been stored\n PATH = #{$dir_path}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb" if File.file?("#{$dir_path}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb")
+    system "touch #{$dir_path}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
   end
 
   def write
@@ -38,8 +37,8 @@ class Kata
 
   def push_github
     puts "change directory"
-    # system "cd /Users/paulportier/code/ApaeP/codewars/codewars_katas"
-    Dir.chdir "/Users/paulportier/code/ApaeP/codewars/codewars_katas"
+    # system "cd #{$dir_path}"
+    Dir.chdir "#{$dir_path}"
     puts "\ngaa\n"
     system "git add ."
     puts "\ngcmsg\n"
@@ -70,7 +69,7 @@ class Kata
         "#{url}/train/javascript"
       end
     else
-      raise StandardError.new "The katas in this language haven't been parametered to be stored yet"
+      raise StandardError.new "The katas in this language are not parametered to be stored"
     end
 
   end
