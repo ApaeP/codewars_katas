@@ -15,13 +15,20 @@ class Kata
     @title = read_title
     @instructions = read_instructions
     @solution = read_solution
-    create_rb_file
     @file_path = "#{$dir_path}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
+    create_rb_file(@file_path)
   end
 
-  def create_rb_file
-    raise StandardError.new "This kata (#{@level}kyu - #{@title}) seems to have already been stored\n PATH = #{$dir_path}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb" if File.file?("#{$dir_path}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb")
-    system "touch #{$dir_path}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
+  def create_rb_file(file_path)
+    if File.file?(file_path)
+      # raise StandardError.new "This kata (#{@level}kyu - #{@title}) seems to have already been stored\n PATH = #{file_path}"
+      puts "!!! The kata #{@title} (lvl #{@level}) seems to already exist\n PATH = #{file_path}"
+      puts "Do you want to override the file? (y / n)"
+      override = gets.chomp
+      raise unless override == 'y'
+      system "rm #{file_path}"
+    end
+    system "touch #{file_path}"
   end
 
   def write
@@ -37,8 +44,7 @@ class Kata
 
   def push_github
     puts "change directory"
-    # system "cd #{$dir_path}"
-    Dir.chdir "#{$dir_path}"
+    Dir.chdir "#{$dir_path}" # system "cd #{$dir_path}"
     puts "\ngaa\n"
     system "git add ."
     puts "\ngcmsg\n"
@@ -50,7 +56,7 @@ class Kata
   private
 
   def validate_url(url)
-    p url.end_with?('ruby' || 'solutions')
+    p url
     if url.end_with?('ruby') || url.end_with?('solutions')
       @language = 'rb'
       "#{url.match(/^\w*:\/\/\w*.\w*\.\w*\/\w*\/\w*/).to_s}/train/ruby"
@@ -58,7 +64,9 @@ class Kata
       @language = "js"
       "#{url.match(/^\w*:\/\/\w*.\w*\.\w*\/\w*\/\w*/).to_s}/train/javascript"
     else
-      raise StandardError.new "The katas in this language are not parametered to be stored"
+       puts "\n\n!!!Wrong URL!!!\n"
+       puts "url>"
+       @url = validate_url(gets.chomp)
     end
 
   end
