@@ -50,24 +50,27 @@ class Kata
   private
 
   def validate_url(url)
-    if url.end_with?('ruby')
+    p url.end_with?('ruby' || 'solutions')
+    if url.end_with?('ruby') || url.end_with?('solutions')
       @language = 'rb'
-      if url.end_with?('/train/ruby')
-        url
-      elsif url.end_with?('/solutions/ruby')
-        "#{url[0..-15]}train/ruby"
-      else
-        "#{url}/train/ruby"
-      end
+      "#{url.match(/^\w*:\/\/\w*.\w*\.\w*\/\w*\/\w*/).to_s}/train/ruby"
+      # if url.end_with?('/train/ruby')
+      #   url
+      # elsif url.end_with?('/solutions/ruby')
+      #   "#{url[0..-15]}train/ruby"
+      # else
+      #   "#{url}/train/ruby"
+      # end
     elsif url.end_with?('javascript')
+      "#{url.match(/^\w*:\/\/\w*.\w*\.\w*\/\w*\/\w*/).to_s}/train/javascript"
       @language = "js"
-      if url.end_with?('/train/javascript')
-        url
-      elsif url.end_with?('/solutions/javascript')
-        "#{url[0..-15]}train/javascript"
-      else
-        "#{url}/train/javascript"
-      end
+      # if url.end_with?('/train/javascript')
+      #   url
+      # elsif url.end_with?('/solutions/javascript')
+      #   "#{url[0..-15]}train/javascript"
+      # else
+      #   "#{url}/train/javascript"
+      # end
     else
       raise StandardError.new "The katas in this language are not parametered to be stored"
     end
