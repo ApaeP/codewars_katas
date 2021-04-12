@@ -38,6 +38,11 @@ def validSolution(horizontal)
   squares = horizontal.each_slice(3).map { |line| line.transpose.each_slice(3).map {|e| e.flatten} }
   (vertical + horizontal + squares.dig(1)).all? {|e| e.sort == (1..9).to_a }
 end
+def validSolution(h)
+  v = h.transpose
+  s = h.each_slice(3).map { |line| line.transpose.each_slice(3).map {|e| e.flatten} }
+  (h + v + s.dig(1)).all? { |e| e.uniq.sum == 45 }
+end
 
 
-# Completed at : 2021-04-13 00:06:38 +0200
+# Completed at : 2021-04-13 00:47:29 +0200
