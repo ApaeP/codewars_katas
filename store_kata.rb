@@ -22,8 +22,8 @@ class Kata
   def create_rb_file(file_path)
     if File.file?(file_path)
       # raise StandardError.new "This kata (#{@level}kyu - #{@title}) seems to have already been stored\n PATH = #{file_path}"
-      puts "!!! The kata #{@title} (lvl #{@level}) seems to already exist\n PATH = #{file_path}"
-      puts "Do you want to override the file? (y / n)"
+      puts "!!! #{@title} (lvl #{@level}) already exists\n (PATH = #{file_path})"
+      puts "Override? (y / n)"
       override = gets.chomp
       raise unless override == 'y'
       system "rm #{file_path}"
@@ -43,13 +43,11 @@ class Kata
   end
 
   def push_github
-    puts "change directory"
     Dir.chdir "#{$dir_path}" # system "cd #{$dir_path}"
-    puts "\ngaa\n"
+    puts "\ncommit\n"
     system "git add ."
-    puts "\ngcmsg\n"
     system "git commit -m \"Kata completed (#{@title} #{@level}kyu)\""
-    puts "\npush on master\n"
+    puts "\npush\n"
     system "git push origin master"
   end
 
@@ -64,7 +62,7 @@ class Kata
       @language = "js"
       "#{url.match(/^\w*:\/\/\w*.\w*\.\w*\/\w*\/\w*/).to_s}/train/javascript"
     else
-       puts "\n\n!!!Wrong URL!!!\n"
+       puts "\n\nURL Not accepted\n"
        puts "url>"
        @url = validate_url(gets.chomp)
     end
@@ -99,7 +97,7 @@ class Kata
     until sol.start_with?('Ruby')
       sol = @browser.div(id: 'description_area').li(index: start_index).text
       start_index += 1
-      raise StandardError.new "No solution found in list elements" if start_index == 50
+      raise StandardError.new "No solution found" if start_index == 50
     end
     sol
   end
@@ -111,14 +109,14 @@ end
 
 def launch
   puts "==============================================================================="
-  puts "                    The URL of the Kata you want to store :"
+  puts "================================= Kata URL : =================================="
   puts "==============================================================================="
   kata = Kata.new(gets.chomp)
-  puts "\nKata créé (titre: #{kata.title} ; lvl: #{kata.level})\n\ntentative d'écriture...\n\n"
+  puts "\nFile created (title: #{kata.title} | lvl: #{kata.level})"
   kata.write
-  puts "kata écrit : (#{kata.file_path})\n\ntentative de push...\n\n"
+  puts "\n\nadd - commit - push (#{kata.file_path})\n\n"
   kata.push_github
-  puts "\n\nkata pushed"
+  puts "\n\ndone"
 end
 
 launch
