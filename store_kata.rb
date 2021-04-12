@@ -22,7 +22,6 @@ class Kata
 
   def create_rb_file(file_path)
     if File.file?(file_path)
-      # raise StandardError.new "This kata (#{@level}kyu - #{@title}) seems to have already been stored\n PATH = #{file_path}"
       puts "!!! #{@title} (lvl #{@level}) already exists\n (PATH = #{file_path})"
       puts "Override? (y / n)"
       override = gets.chomp
