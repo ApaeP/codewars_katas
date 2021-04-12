@@ -15,6 +15,7 @@ class Kata
     @title = read_title
     @instructions = read_instructions
     @solution = read_solution
+    @browser.close
     @file_path = "#{$dir_path}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
     create_rb_file(@file_path)
   end
