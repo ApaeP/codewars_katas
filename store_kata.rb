@@ -54,7 +54,6 @@ class Kata
   private
 
   def validate_url(url)
-    p url
     if url.end_with?('ruby') || url.end_with?('solutions')
       @language = 'rb'
       "#{url.match(/^\w*:\/\/\w*.\w*\.\w*\/\w*\/\w*/).to_s}/train/ruby"
