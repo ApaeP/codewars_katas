@@ -21,7 +21,7 @@
 #   [3, 4, 5, 2, 8, 6, 1, 7, 9]
 # ]); // => true
 # validSolution([
-#   [5, 3, 4, 6, 7, 8, 9, 1, 2], 
+#   [5, 3, 4, 6, 7, 8, 9, 1, 2],
 #   [6, 7, 2, 1, 9, 0, 3, 4, 8],
 #   [1, 0, 0, 3, 4, 2, 5, 6, 0],
 #   [8, 5, 9, 7, 6, 1, 0, 2, 0],
@@ -33,11 +33,6 @@
 # ]); // => false
 
 # Solution
-def validSolution(horizontal)    
-  vertical = horizontal.transpose.map { |e| e }
-  squares = horizontal.each_slice(3).map { |line| line.transpose.each_slice(3).map {|e| e.flatten} }
-  (vertical + horizontal + squares.dig(1)).all? {|e| e.sort == (1..9).to_a }
-end
 def validSolution(h)
   v = h.transpose
   s = h.each_slice(3).map { |line| line.transpose.each_slice(3).map {|e| e.flatten} }
