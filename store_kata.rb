@@ -23,13 +23,13 @@ class Kata
   def create_rb_file(file_path)
     if File.file?(file_path)
       puts "\n\n\n!!! #{@title} (lvl #{@level}) already exists\n (PATH = #{file_path}) !!!\n\n"
-      puts "Override? (y / n)"
-      override = gets.chomp
-      until ['y', 'n'].include?(override)
+      puts "Overwrite? (y / n)"
+      overwrite = gets.chomp
+      until ['y', 'n'].include?(overwrite)
         puts "please answer by 'y' or 'n'"
-        override = gets.chomp
+        overwrite = gets.chomp
       end
-      raise unless override == 'y'
+      raise StandardError.new "STOPPING OVERWRITING" unless overwrite == 'y'
       system "rm #{file_path}"
     end
     system "touch #{file_path}"
@@ -122,13 +122,20 @@ def launch
   puts "================================= Kata URL : =================================="
   puts "==============================================================================="
   kata = Kata.new(gets.chomp)
-  puts "\nFile created (title: #{kata.title} | lvl: #{kata.level})"
+  puts "==============================================================================="
+  puts "==============================================================================="
+  puts "==============================================================================="
+  puts "\n\nFile created (title: #{kata.title} | lvl: #{kata.level})"
   kata.write
+  puts "==============================================================================="
   puts "\n\nadd - commit - push (#{kata.file_path})\n\n"
   kata.push_github
+  puts "==============================================================================="
   puts "\n\ndone"
-  puts "\n\nopening in editor"
+  puts "==============================================================================="
+  puts "\n\nopening file for checking"
   kata.open_in_sublime
+  puts "===============================================================================\n"
 end
 
 launch
