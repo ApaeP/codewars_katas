@@ -52,7 +52,8 @@ class Kata
   end
 
   def open_in_sublime
-    system "stt #{file_path}"
+    puts "stt #{file_path}"
+    system "st #{file_path}"
   end
 
   private
