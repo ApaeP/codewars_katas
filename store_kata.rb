@@ -121,14 +121,25 @@ def auto_reader
   require 'rtesseract'
 
   # take screenshot
-  puts "Taking screenshot"
+  puts "Taking screenshot\n"
   system "screencapture -x -t tiff ./temporary_screencapture.tif"
   # retrieve present url
-  puts "Reading screenshot and retrieving url"
+  puts "Reading screenshot and retrieving URL"
   url = RTesseract.new("temporary_screencapture.tif").to_s.split(' ').find { |e| e.start_with?('http') }
   # delete image
+  until !url.nil?
+    puts "The kata URL should be readable on your screen when launching this script,\nPlease, make it visible and type any key"
+    system "rm ./temporary_screencapture.tif"
+    gets
+    system "screencapture -x -t tiff ./temporary_screencapture.tif"
+    url = RTesseract.new("temporary_screencapture.tif").to_s.split(' ').find { |e| e.start_with?('http') }
+  end
+  puts "URL found (#{url})\n"
   puts "Deleting screenshot"
   system "rm ./temporary_screencapture.tif"
+  puts "=============================="
+  p url
+  puts "=============================="
   url
 end
 
