@@ -117,11 +117,28 @@ class Kata
   end
 end
 
+def auto_reader
+  require 'rtesseract'
+
+  # move to firefox
+
+  # take screenshot
+  puts "Taking screenshot"
+  system "screencapture -x -t tiff ./temporary_screencapture.tif"
+  # retrieve present url
+  puts "Reading screenshot and retrieving url"
+  url = RTesseract.new("temporary_screencapture.tif").to_s.split(' ').find { |e| e.start_with?('http') }
+  # delete image
+  puts "Deleting screenshot"
+  system "rm ./temporary_screencapture.tif"
+  url
+end
+
 def launch
   puts "==============================================================================="
   puts "================================= Kata URL : =================================="
   puts "==============================================================================="
-  kata = Kata.new(gets.chomp)
+  kata = Kata.new(auto_reader)
   puts "==============================================================================="
   puts "==============================================================================="
   puts "==============================================================================="
