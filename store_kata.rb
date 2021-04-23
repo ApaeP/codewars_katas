@@ -72,9 +72,15 @@ class Kata
       @language = "js"
       "#{url.match(/^\w*:\/\/\w*.\w*\.\w*\/\w*\/\w*/).to_s}/train/javascript"
     else
-       puts "\n\nURL Not accepted\n"
-       puts "url>"
-       @url = validate_url(gets.chomp)
+      puts "\n\n\e[91m\e[1mInvalid URL\n\e[0m\n"
+      puts "Press p to enter URL manually, or any other key to scan screen again"
+      answer = gets.chomp
+      if answer == 'p'
+        puts "enter url :"
+        @url = validate_url(gets.chomp)
+      else
+        @url = validate_url(auto_reader)
+      end
     end
 
   end
@@ -129,13 +135,13 @@ def auto_reader
   # delete image
   until !url.nil?
     # "\e[92m\e[5m\e[1mCORRECT\e[25m\e[0m" : "\e[91m\e[5m\e[1mINCORRECT\e[25m\e[0m"
-    puts "\n\nThe kata URL should be \e[91m\e[5m\e[1mentirely displayed\e[25m\e[0m on your screen when launching this script,\nPlease, make it visible and type any key"
+    puts "\n\nThe kata URL should be \e[91m\e[1mentirely displayed\n\e[0m on your screen when launching this script,\nPlease, make it visible and type any key"
     system "rm ./temporary_screencapture.tif"
     gets
     system "screencapture -x -t tiff ./temporary_screencapture.tif"
     url = RTesseract.new("temporary_screencapture.tif").to_s.split(' ').find { |e| e.start_with?('http') }
   end
-  puts "\e[92m\e[5m\e[1mURL found (#{url})\n\e[25m\e[0m"
+  puts "\e[92m\e[1mURL found (#{url})\n\e[0m"
   puts "Deleting screenshot"
   system "rm ./temporary_screencapture.tif"
   puts "=============================="
