@@ -59,6 +59,7 @@ class Kata
     Dir.chdir "#{$dir_path}"
     puts "stt #{file_path}"
     system "st #{file_path}"
+    system "open #{file_path}"
   end
 
   private
