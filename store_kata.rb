@@ -51,6 +51,10 @@ class Kata
     system "git push origin master"
   end
 
+  def open_in_sublime
+    system "stt #{file_path}"
+  end
+
   private
 
   def validate_url(url)
@@ -116,6 +120,7 @@ def launch
   puts "\n\nadd - commit - push (#{kata.file_path})\n\n"
   kata.push_github
   puts "\n\ndone"
+
 end
 
 launch
