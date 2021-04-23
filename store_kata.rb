@@ -120,7 +120,8 @@ def launch
   puts "\n\nadd - commit - push (#{kata.file_path})\n\n"
   kata.push_github
   puts "\n\ndone"
-
+  puts "\n\nopening in editor"
+  kata.open_in_sublime
 end
 
 launch
