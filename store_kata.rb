@@ -22,9 +22,13 @@ class Kata
 
   def create_rb_file(file_path)
     if File.file?(file_path)
-      puts "!!! #{@title} (lvl #{@level}) already exists\n (PATH = #{file_path})"
+      puts "\n\n\n!!! #{@title} (lvl #{@level}) already exists\n (PATH = #{file_path}) !!!\n\n"
       puts "Override? (y / n)"
       override = gets.chomp
+      until ['y', 'n'].include?(override)
+        puts "please answer by 'y' or 'n'"
+        override = gets.chomp
+      end
       raise unless override == 'y'
       system "rm #{file_path}"
     end
@@ -52,6 +56,7 @@ class Kata
   end
 
   def open_in_sublime
+    Dir.chdir "#{$dir_path}"
     puts "stt #{file_path}"
     system "st #{file_path}"
   end
