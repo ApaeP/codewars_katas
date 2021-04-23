@@ -29,7 +29,7 @@ class Kata
         puts "please answer by 'y' or 'n'"
         overwrite = gets.chomp
       end
-      raise StandardError.new "STOPPING OVERWRITING" unless overwrite == 'y'
+      raise "STOP OVERWRITING" unless overwrite == 'y'
       system "rm #{file_path}"
     end
     system "touch #{file_path}"
@@ -73,11 +73,13 @@ class Kata
       "#{url.match(/^\w*:\/\/\w*.\w*\.\w*\/\w*\/\w*/).to_s}/train/javascript"
     else
       puts "\n\n\e[91m\e[1mInvalid URL\n\e[0m\n"
-      puts "Press p to enter URL manually, or any other key to scan screen again"
+      puts "Press 'p' to enter URL manually, 'c' to quit or any other key to scan screen again"
       answer = gets.chomp
       if answer == 'p'
         puts "enter url :"
         @url = validate_url(gets.chomp)
+      elsif answer == 'c'
+        raise "STOPPED"
       else
         @url = validate_url(auto_reader)
       end
@@ -113,7 +115,7 @@ class Kata
     until sol.start_with?('Ruby')
       sol = @browser.div(id: 'description_area').li(index: start_index).text
       start_index += 1
-      raise StandardError.new "No solution found" if start_index == 50
+      raise "NO SOLUTION FOUND" if start_index == 50
     end
     sol
   end
@@ -151,13 +153,7 @@ def auto_reader
 end
 
 def launch
-  # puts "==============================================================================="
-  # puts "================================= Kata URL : =================================="
-  # puts "==============================================================================="
   kata = Kata.new(auto_reader)
-  # puts "==============================================================================="
-  # puts "==============================================================================="
-  # puts "==============================================================================="
   puts "\n\nFile created (title: #{kata.title} | lvl: #{kata.level})"
   kata.write
   puts "==============================================================================="
