@@ -128,13 +128,14 @@ def auto_reader
   url = RTesseract.new("temporary_screencapture.tif").to_s.split(' ').find { |e| e.start_with?('http') }
   # delete image
   until !url.nil?
-    puts "The kata URL should be readable on your screen when launching this script,\nPlease, make it visible and type any key"
+    # "\e[92m\e[5m\e[1mCORRECT\e[25m\e[0m" : "\e[91m\e[5m\e[1mINCORRECT\e[25m\e[0m"
+    puts "\n\nThe kata URL should be \e[91m\e[5m\e[1mentirely displayed\e[25m\e[0m on your screen when launching this script,\nPlease, make it visible and type any key"
     system "rm ./temporary_screencapture.tif"
     gets
     system "screencapture -x -t tiff ./temporary_screencapture.tif"
     url = RTesseract.new("temporary_screencapture.tif").to_s.split(' ').find { |e| e.start_with?('http') }
   end
-  puts "URL found (#{url})\n"
+  puts "\e[92m\e[5m\e[1mURL found (#{url})\n\e[25m\e[0m"
   puts "Deleting screenshot"
   system "rm ./temporary_screencapture.tif"
   puts "=============================="
