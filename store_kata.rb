@@ -4,12 +4,12 @@
 require_relative '../credits'
 
 class Kata
-  attr_accessor :url, :level, :title, :instructions, :solution, :file_path, :language
   require 'watir'
+  attr_accessor :url, :level, :title, :instructions, :solution, :file_path, :language
 
-  def initialize(url)
+  def initialize
     @language = nil
-    @url = validate_url(url)
+    @url = validate_url(auto_reader)
     @browser = open_browser_authenticated
     @level = read_level
     @title = read_title
@@ -55,6 +55,21 @@ class Kata
   end
 
   private
+
+  def auto_reader
+    take_screenshot
+    url = retrieve_url_from_screenshot
+    until !url.nil?
+      puts "\n\nKata URL should be \e[91m\e[1mentirely displayed\n\e[0m on the screen.\nMake it visible and press Enter"
+      delete_screenshot
+      gets
+      take_screenshot
+      url = retrieve_url_from_screenshot
+    end
+    delete_screenshot
+    puts "\e[92m\e[1mURL found (#{url})\n\e[0m"
+    url
+  end
 
   def validate_url(url)
     if url.end_with?('ruby') || url.end_with?('solutions')
@@ -114,44 +129,31 @@ class Kata
   def read_instructions
     @browser.div(id: 'description').text
   end
-end
 
-def auto_reader
-  take_screenshot
-  url = retrieve_url_from_screenshot
-  until !url.nil?
-    puts "\n\nKata URL should be \e[91m\e[1mentirely displayed\n\e[0m on the screen.\nMake it visible and press Enter"
-    delete_screenshot
-    gets
-    take_screenshot
-    url = retrieve_url_from_screenshot
+
+  def take_screenshot
+    system "screencapture -x -t tiff ./temporary_screencapture.tif"
   end
-  delete_screenshot
-  puts "\e[92m\e[1mURL found (#{url})\n\e[0m"
-  url
-end
 
-def take_screenshot
-  system "screencapture -x -t tiff ./temporary_screencapture.tif"
-end
+  def delete_screenshot
+    system "rm ./temporary_screencapture.tif"
+  end
 
-def delete_screenshot
-  system "rm ./temporary_screencapture.tif"
-end
+  def retrieve_url_from_screenshot
+    require 'rtesseract'
+    RTesseract.new("temporary_screencapture.tif").to_s.split(' ').find { |e| e.start_with?('http') }
+  end
 
-def retrieve_url_from_screenshot
-  require 'rtesseract'
-  RTesseract.new("temporary_screencapture.tif").to_s.split(' ').find { |e| e.start_with?('http') }
-end
-
-def one_char_gets
-  begin
-    system("stty raw -echo")
-    decision = STDIN.getc
-  ensure
-    system("stty -raw echo")
+  def one_char_gets
+    begin
+      system("stty raw -echo")
+      decision = STDIN.getc
+    ensure
+      system("stty -raw echo")
+    end
   end
 end
+
 
 
 
@@ -171,8 +173,8 @@ end
 
 
 def launch
-  kata = Kata.new(auto_reader)
-  puts "\n\nFile created (title: #{kata.title} | lvl: #{kata.level})"
+  kata = Kata.new#(auto_reader)
+  puts "File created (title: #{kata.title} | lvl: #{kata.level})"
   kata.write
   puts "==============================================================================="
   puts "\n\nadd - commit - push (#{kata.file_path})\n\n"
