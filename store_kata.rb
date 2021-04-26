@@ -1,16 +1,11 @@
-# Fetching infos from a codewars kata url
-# create a corresponding file
-# push to GitHub
-
 # URL of kata should be displayed on screen
-# $account, $password and $dir_path should exist
-# $account, $password : codewars_email, codewars_password
-# $dir_path :
+# $account, $password : codewars_email, codewars_password should exist
+# current directory should be tracked by git and have a remote (origin) on Github
 require_relative '../credits'
 
 class Kata
   require 'watir'
-  attr_accessor :url, :level, :title, :instructions, :solution, :file_path, :language
+  attr_reader :level, :title, :file_path
 
   def initialize
     @language = nil
@@ -65,15 +60,21 @@ class Kata
   def auto_reader
     take_screenshot
     url = retrieve_url_from_screenshot
-    until !url.nil?
-      puts "\n\nKata URL should be \e[91m\e[1mentirely displayed\e[0m on the screen.\nMake it visible and press Enter"
-      delete_screenshot
-      gets
-      take_screenshot
-      url = retrieve_url_from_screenshot
-    end
     delete_screenshot
-    puts "\e[92m\e[1mURL found (#{url})\n\e[0m"
+    until !url.nil?
+      puts "\n\nKata URL should be \e[91m\e[1mentirely displayed\e[0m on the screen.\nPress 'm' to enter URL manually or any other key to try again\n"
+      answer = one_char_gets
+      if answer == 'm'
+        puts "\nEnter the URL"
+        url = gets.chomp
+      else
+        puts "Trying again"
+        take_screenshot
+        url = retrieve_url_from_screenshot
+        delete_screenshot
+        puts "\e[92m\e[1mURL found (#{url})\n\e[0m" unless url.nil? || url.empty?
+      end
+    end
     url
   end
 
@@ -86,12 +87,12 @@ class Kata
       "#{url.match(/^\w*:\/\/\w*.\w*\.\w*\/\w*\/\w*/).to_s}/train/javascript"
     else
       puts "\n\n\e[91m\e[1mInvalid URL\n\e[0m\n"
-      puts "Press 'p' to enter URL manually, 'c' to quit or any other key to scan screen again"
+      puts "Press 'p' to enter URL manually, 'q' to quit or any other key to scan screen again"
       answer = one_char_gets
       if answer == 'p'
         puts "enter url :"
         @url = validate_url(gets.chomp)
-      elsif answer == 'c'
+      elsif answer == 'q'
         raise "STOPPED"
       else
         @url = validate_url(auto_reader)
@@ -137,10 +138,12 @@ class Kata
   end
 
   def take_screenshot
+    puts "taking a screenshot"
     `screencapture -x -t tiff ./temporary_screencapture.tif`
   end
 
   def delete_screenshot
+    puts "deleting a screenshot"
     `rm ./temporary_screencapture.tif`
   end
 
