@@ -23,10 +23,10 @@ class Kata
   def create_rb_file
     if File.file?(@file_path)
       puts "\n\n\nThis Kata already exists (PATH = #{@file_path}).\nOverwrite? (y / n)\n\n"
-      overwrite = gets.chomp
+      overwrite = one_char_gets
       until ['y', 'n'].include?(overwrite)
         puts "please answer by 'y' or 'n'"
-        overwrite = gets.chomp
+        overwrite = one_char_gets
       end
       raise "STOP OVERWRITING" unless overwrite == 'y'
       system "rm #{@file_path}"
@@ -66,7 +66,7 @@ class Kata
     else
       puts "\n\n\e[91m\e[1mInvalid URL\n\e[0m\n"
       puts "Press 'p' to enter URL manually, 'c' to quit or any other key to scan screen again"
-      answer = gets.chomp
+      answer = one_char_gets
       if answer == 'p'
         puts "enter url :"
         @url = validate_url(gets.chomp)
@@ -101,14 +101,18 @@ class Kata
   end
 
   def read_solution
+    puts "1"
     @browser.a(data_tab: 'solutions').click
+    puts "2"
     start_index = 2
     solution = ""
     until solution.start_with?('Ruby')
+      puts "3"
       solution = @browser.div(id: 'description_area').li(index: start_index).text
       start_index += 1
       raise "NO SOLUTION FOUND" if start_index == 50
     end
+    puts "4"
     solution
   end
 
@@ -145,6 +149,14 @@ def retrieve_url_from_screenshot
   RTesseract.new("temporary_screencapture.tif").to_s.split(' ').find { |e| e.start_with?('http') }
 end
 
+def one_char_gets
+  begin
+    system("stty raw -echo")
+    decision = STDIN.getc
+  ensure
+    system("stty -raw echo")
+  end
+end
 
 
 
