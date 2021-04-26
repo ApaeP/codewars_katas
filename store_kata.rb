@@ -23,7 +23,19 @@ class Kata
     @browser.close
     @file_path = "#{`pwd`.chomp}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
     create_rb_file
+    write
   end
+
+  def add_commit_push
+    Dir.chdir "#{$dir_path}"
+    `git add .; git commit -m \"Kata completed (#{@title} #{@level}kyu)\"; git push origin master`
+  end
+
+  def open_in_sublime
+    `open #{file_path}`
+  end
+
+  private
 
   def create_rb_file
     if File.file?(@file_path)
@@ -49,17 +61,6 @@ class Kata
     File.open(@file_path, "a") { |e| e.puts("#{@solution[5..-1]}") }
     File.open(@file_path, "a") { |e| e.puts("\n\n# Completed at : #{Time.now}") }
   end
-
-  def add_commit_push
-    Dir.chdir "#{$dir_path}"
-    `git add .; git commit -m \"Kata completed (#{@title} #{@level}kyu)\"; git push origin master`
-  end
-
-  def open_in_sublime
-    `open #{file_path}`
-  end
-
-  private
 
   def auto_reader
     take_screenshot
@@ -159,12 +160,8 @@ class Kata
 end
 
 def launch
-  p `pwd`.chomp
-  lol = `pwd`
-  p lol
   kata = Kata.new
   puts "Create file (title: #{kata.title} | lvl: #{kata.level})"
-  kata.write
   puts "add - commit - push (#{kata.file_path})"
   kata.add_commit_push
   kata.open_in_sublime
