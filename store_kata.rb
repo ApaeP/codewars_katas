@@ -17,22 +17,21 @@ class Kata
     @solution = read_solution
     @browser.close
     @file_path = "#{$dir_path}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
-    create_rb_file(@file_path)
+    create_rb_file
   end
 
-  def create_rb_file(file_path)
-    if File.file?(file_path)
-      puts "\n\n\n!!! #{@title} (lvl #{@level}) already exists\n (PATH = #{file_path}) !!!\n\n"
-      puts "Overwrite? (y / n)"
+  def create_rb_file
+    if File.file?(@file_path)
+      puts "\n\n\nThis Kata already exists (PATH = #{@file_path}).\nOverwrite? (y / n)\n\n"
       overwrite = gets.chomp
       until ['y', 'n'].include?(overwrite)
         puts "please answer by 'y' or 'n'"
         overwrite = gets.chomp
       end
       raise "STOP OVERWRITING" unless overwrite == 'y'
-      system "rm #{file_path}"
+      system "rm #{@file_path}"
     end
-    system "touch #{file_path}"
+    system "touch #{@file_path}"
   end
 
   def write
@@ -46,19 +45,12 @@ class Kata
     File.open(@file_path, "a") { |e| e.puts("\n\n# Completed at : #{Time.now}") }
   end
 
-  def push_github
-    Dir.chdir "#{$dir_path}" # system "cd #{$dir_path}"
-    puts "\ncommit\n"
-    system "git add ."
-    system "git commit -m \"Kata completed (#{@title} #{@level}kyu)\""
-    puts "\npush\n"
-    system "git push origin master"
+  def add_commit_push
+    Dir.chdir "#{$dir_path}"
+    system "git add .; git commit -m \"Kata completed (#{@title} #{@level}kyu)\"; git push origin master"
   end
 
   def open_in_sublime
-    Dir.chdir "#{$dir_path}"
-    puts "stt #{file_path}"
-    system "st #{file_path}"
     system "open #{file_path}"
   end
 
@@ -111,13 +103,13 @@ class Kata
   def read_solution
     @browser.a(data_tab: 'solutions').click
     start_index = 2
-    sol = ""
-    until sol.start_with?('Ruby')
-      sol = @browser.div(id: 'description_area').li(index: start_index).text
+    solution = ""
+    until solution.start_with?('Ruby')
+      solution = @browser.div(id: 'description_area').li(index: start_index).text
       start_index += 1
       raise "NO SOLUTION FOUND" if start_index == 50
     end
-    sol
+    solution
   end
 
   def read_instructions
@@ -126,31 +118,50 @@ class Kata
 end
 
 def auto_reader
-  require 'rtesseract'
-
-  # take screenshot
-  puts "Taking screenshot\n"
-  system "screencapture -x -t tiff ./temporary_screencapture.tif"
-  # retrieve present url
-  puts "Reading screenshot and retrieving URL"
-  url = RTesseract.new("temporary_screencapture.tif").to_s.split(' ').find { |e| e.start_with?('http') }
-  # delete image
+  take_screenshot
+  url = retrieve_url_from_screenshot
   until !url.nil?
-    # "\e[92m\e[5m\e[1mCORRECT\e[25m\e[0m" : "\e[91m\e[5m\e[1mINCORRECT\e[25m\e[0m"
-    puts "\n\nThe kata URL should be \e[91m\e[1mentirely displayed\n\e[0m on your screen when launching this script,\nPlease, make it visible and type any key"
-    system "rm ./temporary_screencapture.tif"
+    puts "\n\nKata URL should be \e[91m\e[1mentirely displayed\n\e[0m on the screen.\nMake it visible and press Enter"
+    delete_screenshot
     gets
-    system "screencapture -x -t tiff ./temporary_screencapture.tif"
-    url = RTesseract.new("temporary_screencapture.tif").to_s.split(' ').find { |e| e.start_with?('http') }
+    take_screenshot
+    url = retrieve_url_from_screenshot
   end
+  delete_screenshot
   puts "\e[92m\e[1mURL found (#{url})\n\e[0m"
-  puts "Deleting screenshot"
-  system "rm ./temporary_screencapture.tif"
-  puts "=============================="
-  p url
-  puts "=============================="
   url
 end
+
+def take_screenshot
+  system "screencapture -x -t tiff ./temporary_screencapture.tif"
+end
+
+def delete_screenshot
+  system "rm ./temporary_screencapture.tif"
+end
+
+def retrieve_url_from_screenshot
+  require 'rtesseract'
+  RTesseract.new("temporary_screencapture.tif").to_s.split(' ').find { |e| e.start_with?('http') }
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def launch
   kata = Kata.new(auto_reader)
@@ -158,7 +169,7 @@ def launch
   kata.write
   puts "==============================================================================="
   puts "\n\nadd - commit - push (#{kata.file_path})\n\n"
-  kata.push_github
+  kata.add_commit_push
   puts "==============================================================================="
   puts "\n\ndone"
   puts "==============================================================================="
