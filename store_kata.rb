@@ -22,7 +22,7 @@ class Kata
 
   def create_rb_file
     if File.file?(@file_path)
-      puts "\n\n\nThis Kata already exists (PATH = #{@file_path}).\nOverwrite? (y / n)\n\n"
+      puts "This Kata \e[91m\e[1malready exists\e[0m.\nOverwrite? (y / n)\n"
       overwrite = one_char_gets
       until ['y', 'n'].include?(overwrite)
         puts "please answer by 'y' or 'n'"
@@ -60,7 +60,7 @@ class Kata
     take_screenshot
     url = retrieve_url_from_screenshot
     until !url.nil?
-      puts "\n\nKata URL should be \e[91m\e[1mentirely displayed\n\e[0m on the screen.\nMake it visible and press Enter"
+      puts "\n\nKata URL should be \e[91m\e[1mentirely displayed\e[0m on the screen.\nMake it visible and press Enter"
       delete_screenshot
       gets
       take_screenshot
@@ -130,7 +130,6 @@ class Kata
     @browser.div(id: 'description').text
   end
 
-
   def take_screenshot
     system "screencapture -x -t tiff ./temporary_screencapture.tif"
   end
@@ -154,37 +153,13 @@ class Kata
   end
 end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def launch
-  kata = Kata.new#(auto_reader)
-  puts "File created (title: #{kata.title} | lvl: #{kata.level})"
+  kata = Kata.new
+  puts "Create file (title: #{kata.title} | lvl: #{kata.level})"
   kata.write
-  puts "==============================================================================="
-  puts "\n\nadd - commit - push (#{kata.file_path})\n\n"
+  puts "add - commit - push (#{kata.file_path})"
   kata.add_commit_push
-  puts "==============================================================================="
-  puts "\n\ndone"
-  puts "==============================================================================="
-  puts "\n\nopening file for checking"
   kata.open_in_sublime
-  puts "===============================================================================\n"
 end
 
 launch
