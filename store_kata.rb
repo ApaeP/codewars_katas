@@ -1,11 +1,14 @@
-# URL of kata should be displayed on screen
-# $account, $password : codewars_email, codewars_password should exist
+# $account, $password : codewars_email, codewars_password => should exist
 # current directory should be tracked by git and have a remote (origin) on Github
 require_relative '../credits'
 
 class Kata
   require 'watir'
   attr_reader :level, :title, :file_path
+
+  def self.save_kata
+    new
+  end
 
   def initialize
     @language = nil
@@ -19,7 +22,11 @@ class Kata
     @file_path = "#{`pwd`.chomp}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
     create_rb_file
     write
+    add_commit_push
+    open_in_sublime
   end
+
+  private
 
   def add_commit_push
     Dir.chdir "#{$dir_path}"
@@ -29,8 +36,6 @@ class Kata
   def open_in_sublime
     `open #{file_path}`
   end
-
-  private
 
   def create_rb_file
     if File.file?(@file_path)
@@ -138,12 +143,10 @@ class Kata
   end
 
   def take_screenshot
-    puts "taking a screenshot"
     `screencapture -x -t tiff ./temporary_screencapture.tif`
   end
 
   def delete_screenshot
-    puts "deleting a screenshot"
     `rm ./temporary_screencapture.tif`
   end
 
@@ -163,11 +166,11 @@ class Kata
 end
 
 def launch
-  kata = Kata.new
-  puts "Create file (title: #{kata.title} | lvl: #{kata.level})"
-  puts "add - commit - push (#{kata.file_path})"
-  kata.add_commit_push
-  kata.open_in_sublime
+  kata = Kata.save_kata
+  # puts "Create file (title: #{kata.title} | lvl: #{kata.level})"
+  # puts "add - commit - push (#{kata.file_path})"
+  # kata.add_commit_push
+  # kata.open_in_sublime
 end
 
 launch
