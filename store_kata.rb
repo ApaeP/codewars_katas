@@ -1,6 +1,11 @@
 # Fetching infos from a codewars kata url
-# create a file in a subdirectory "codewars_katas"
-# push it on GitHub
+# create a corresponding file
+# push to GitHub
+
+# URL of kata should be displayed on screen
+# $account, $password and $dir_path should exist
+# $account, $password : codewars_email, codewars_password
+# $dir_path :
 require_relative '../credits'
 
 class Kata
@@ -16,7 +21,7 @@ class Kata
     @instructions = read_instructions
     @solution = read_solution
     @browser.close
-    @file_path = "#{$dir_path}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
+    @file_path = "#{`pwd`.chomp}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
     create_rb_file
   end
 
@@ -29,9 +34,9 @@ class Kata
         overwrite = one_char_gets
       end
       raise "STOP OVERWRITING" unless overwrite == 'y'
-      system "rm #{@file_path}"
+      `rm #{@file_path}`
     end
-    system "touch #{@file_path}"
+    `touch #{@file_path}`
   end
 
   def write
@@ -47,11 +52,11 @@ class Kata
 
   def add_commit_push
     Dir.chdir "#{$dir_path}"
-    system "git add .; git commit -m \"Kata completed (#{@title} #{@level}kyu)\"; git push origin master"
+    `git add .; git commit -m \"Kata completed (#{@title} #{@level}kyu)\"; git push origin master`
   end
 
   def open_in_sublime
-    system "open #{file_path}"
+    `open #{file_path}`
   end
 
   private
@@ -131,11 +136,11 @@ class Kata
   end
 
   def take_screenshot
-    system "screencapture -x -t tiff ./temporary_screencapture.tif"
+    `screencapture -x -t tiff ./temporary_screencapture.tif`
   end
 
   def delete_screenshot
-    system "rm ./temporary_screencapture.tif"
+    `rm ./temporary_screencapture.tif`
   end
 
   def retrieve_url_from_screenshot
@@ -154,6 +159,9 @@ class Kata
 end
 
 def launch
+  p `pwd`.chomp
+  lol = `pwd`
+  p lol
   kata = Kata.new
   puts "Create file (title: #{kata.title} | lvl: #{kata.level})"
   kata.write
