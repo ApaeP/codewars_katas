@@ -101,18 +101,13 @@ class Kata
   end
 
   def read_solution
-    puts "1"
     @browser.a(data_tab: 'solutions').click
-    puts "2"
-    start_index = 2
-    solution = ""
+    start_index, solution = 2, ""
     until solution.start_with?('Ruby')
-      puts "3"
       solution = @browser.div(id: 'description_area').li(index: start_index).text
       start_index += 1
       raise "NO SOLUTION FOUND" if start_index == 50
     end
-    puts "4"
     solution
   end
 
