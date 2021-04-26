@@ -20,6 +20,7 @@ class Kata
     @solution = read_solution
     @browser.close
     @file_path = "#{`pwd`.chomp}/Ruby/#{@level}kyu_#{@title.downcase.split.join('_')}.rb"
+
     create_rb_file
     write
     add_commit_push
@@ -29,6 +30,7 @@ class Kata
   private
 
   def add_commit_push
+    puts "add - commit - push (#{@file_path})"
     Dir.chdir "#{$dir_path}"
     `git add .; git commit -m \"Kata completed (#{@title} #{@level}kyu)\"; git push origin master`
   end
@@ -38,6 +40,7 @@ class Kata
   end
 
   def create_rb_file
+    puts "Create file (title: #{@title} | lvl: #{@level})"
     if File.file?(@file_path)
       puts "This Kata \e[91m\e[1malready exists\e[0m.\nOverwrite? (y / n)\n"
       overwrite = one_char_gets
@@ -165,12 +168,4 @@ class Kata
   end
 end
 
-def launch
-  kata = Kata.save_kata
-  # puts "Create file (title: #{kata.title} | lvl: #{kata.level})"
-  # puts "add - commit - push (#{kata.file_path})"
-  # kata.add_commit_push
-  # kata.open_in_sublime
-end
-
-launch
+Kata.save_kata
